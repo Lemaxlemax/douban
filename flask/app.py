@@ -14,7 +14,6 @@ def index():
     return render_template('index.html')
 
 
-# 不同链接相同网页（函数别重复）
 @app.route('/index')
 def home():
     return index()
@@ -48,7 +47,6 @@ def score():
     cur.close()
     con.close()
     return render_template('score.html', score=score, num=num)
-# 变量可以带入html文件的任意位置，即使是<script>标签内
 
 
 @app.route('/word')
@@ -59,9 +57,9 @@ def word():
     ins = cur.execute(sql)
     text = ''
     for item in ins:
-        text += item[0]  # 返回数据是二维列表
-    img = Image.open('./static/assets/img/2.jpg')  # Image打开图片
-    img_array = np.array(img)  # 图片转换为数组
+        text += item[0]
+    img = Image.open('./static/assets/img/2.jpg')
+    img_array = np.array(img)
     cut = jieba.lcut(text)
     new_cut=[]
     for i in cut:
@@ -70,16 +68,14 @@ def word():
     print(len(new_cut))
     string = ' '.join(new_cut)
     wc = WordCloud(
-        mask=img_array,  # 蒙版使用数组对象，或者直接imageio.imread()图片
+        mask=img_array,
         background_color='#f5f9fc',
         font_path='msyh.ttc',
-    ).generate_from_text(string)  # 同generate()
+    ).generate_from_text(string)
     plt.figure(figsize=(1024,946), dpi=1)
-    # 绘制图i，pyplot本身便是在设置图i的实例，直到绘制下一个figure
-    plt.imshow(wc)   # 处理词云为图片
-    plt.axis('off')  # 关闭显示坐标
+    plt.imshow(wc)
+    plt.axis('off')
     plt.savefig('./static/assets/img/word.png', bbox_inches='tight', facecolor='#f5f9fc')
-    # 先用plt.show()会重新生成一张空白画布，导致savefig保存的是一片空白图
     cur.close()
     con.close()
     return render_template('word.html')
